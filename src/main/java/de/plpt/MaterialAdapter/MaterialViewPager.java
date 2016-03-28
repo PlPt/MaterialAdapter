@@ -1,21 +1,24 @@
 package de.plpt.MaterialAdapter;
 
+import android.content.res.Resources;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 /**
  * Created by Pascal on 07.12.2015.
+ * Represents a simple adapter class for a ViewPager in Material design
  */
 public class MaterialViewPager extends MaterialView {
 
 
-    //<editor-fold desc="Var Def">
+    //region VarDef
     private FragmentPagerAdapter mPagerAdapter;
     MaterialDrawer _materialDrawer;
     boolean useTabLayout;
@@ -25,9 +28,9 @@ public class MaterialViewPager extends MaterialView {
     }
 
     ViewPager mViewPager;
-    //</editor-fold>
+    //endregion
 
-    // <editor-fold desc="Constructors">
+    // region Constructors
 
     /**
      * Default Constructor with default Layout, Drawer wil include it into a drawer Layout
@@ -42,7 +45,10 @@ public class MaterialViewPager extends MaterialView {
        this.useTabLayout = useTabLayout;
         mPagerAdapter = adapter;
     }
-    //</editor-fold>
+    //endregion
+
+    //region Methods
+
 
     /**
      * Initializes the ViewPager and it's Layout
@@ -56,7 +62,7 @@ public class MaterialViewPager extends MaterialView {
             lp.topMargin += getStatusBarHeight();
             mViewPager.setLayoutParams(lp);
 
-
+                //region treeObserver
             mViewPager.getViewTreeObserver().addOnGlobalLayoutListener(
                     new ViewTreeObserver.OnGlobalLayoutListener() {
 
@@ -79,29 +85,24 @@ public class MaterialViewPager extends MaterialView {
 
                             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mViewPager.getLayoutParams();
                             lp.topMargin += height;
-                            //mViewPager.setLayoutParams(lp);
-
-                            //  mViewPager.setPadding(0, height, 0, 0);
-
                             mViewPager.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
                         }
 
                     });
+            //endregion
 
         }
         else
         {
-            //throw new UnsupportedOperationException("Method without drawerLayout not implemented");
-        final     View view = _act.getLayoutInflater().inflate(R.layout.view_pager_material_drawer,null);
+
+        final     View view =  LayoutInflater.from(_act).inflate(R.layout.view_pager_material_drawer, null);
             _toolbar = (android.support.v7.widget.Toolbar) view.findViewById(R.id.toolbar);
             DrawerLayout drawerLayout = (DrawerLayout)view;
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED); // No NavView in onlyViewPagermode
            view.findViewById(R.id.nav_view).setVisibility(View.GONE);
-          //  NavigationView vv = (NavigationView)view.findViewById(R.id.nav_view);
 
 
-             // No NavView in onlyViewPagermode
                     (_act).setSupportActionBar(_toolbar);
                          applyLayout(view, _act, false);
 
@@ -155,7 +156,7 @@ public class MaterialViewPager extends MaterialView {
 
 
     /**
-     * Set the MaterialDrawer for include the ViewPAger in the DrawerLayout
+     * Set the MaterialDrawer for include the ViewPager in the DrawerLayout
      * @param materialDrawer
      */
     public void setMaterialDrawer(MaterialDrawer materialDrawer)
@@ -163,11 +164,34 @@ public class MaterialViewPager extends MaterialView {
         this._materialDrawer = materialDrawer;
     }
 
+    /***
+     * Sets the page margin in Pixels to the ViewPager
+     * @param pixels Margin in Pixels
+     */
     public void setPageMargin(int pixels)
     {
         if(mViewPager!=null)mViewPager.setPageMargin(pixels);
     }
 
+    /***
+     * Sets the page margin in DP, the margin is relative to Display
+     * @param dp DP margin
+     */
+    public void setPageMarginInDp(int dp)
+    {
+        setPageMargin(dpToPx(dp));
+    }
+
+    /***
+     * Convets DP to pixels
+     * @param dp Input DP
+     * @return DP value in pixels
+     */
+    private static int dpToPx(int dp)
+    {
+
+        return (int) (dp *  Resources.getSystem().getDisplayMetrics().density);
+    }
 
     /**
      * Returns true if the ViewPager allows TabLayout
@@ -198,4 +222,5 @@ public class MaterialViewPager extends MaterialView {
     public void setCurrentItem(int currentItem) {
         this.mViewPager.setCurrentItem(currentItem);
     }
+    //endregion
 }

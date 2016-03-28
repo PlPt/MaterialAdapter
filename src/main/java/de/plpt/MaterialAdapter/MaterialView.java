@@ -6,34 +6,39 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
-
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 /**
  * Created by Pascal on 07.12.2015.
+ * Simple class which presents a MaterialView in Material design
  */
 public class MaterialView {
 
-    public Activity getActivity() {
-        return _act;
-    }
 
+    //region VarDef
     AppCompatActivity _act;
+    public static int PopupOverlayTheme = R.style.AppTheme_PopupOverlay;
    FrameLayout _contentLayout ;
     android.support.v7.widget.Toolbar _toolbar;
     boolean useTabLayout;
     View _currView;
+    //endregion
 
 
+    //region Constructors
     /**
      * Default Constructor for Object inheritance
+     * DON'T use it for common class instance creation
      */
+        @Deprecated
          public MaterialView()
          {
 
          }
+
 
 
     /**
@@ -44,8 +49,11 @@ public class MaterialView {
     {
         this._act = activity;
        View view = _act.getLayoutInflater().inflate(R.layout.default_material_view,null);
-        _contentLayout = (FrameLayout)view.findViewById(R.id.content);
+
+          _contentLayout = (FrameLayout)view.findViewById(R.id.content);
        _toolbar = (android.support.v7.widget.Toolbar) view.findViewById(R.id.toolbar);
+
+        _toolbar.setPopupTheme(PopupOverlayTheme);
 
 
             _act.setSupportActionBar(_toolbar);
@@ -59,16 +67,7 @@ public class MaterialView {
 
     }
 
-    /**
-     * Resizes a Drawable to 100x100px
-     * @param image
-     * @return
-     */
-    private Drawable resize(Drawable image) {
-        Bitmap b = ((BitmapDrawable)image).getBitmap();
-        Bitmap bitmapResized = Bitmap.createScaledBitmap(b, 100, 100, false);
-        return new BitmapDrawable(_act.getResources(), bitmapResized);
-    }
+
 
     /**
      * Default Constructor in use with a MaterialViewPager
@@ -78,7 +77,7 @@ public class MaterialView {
     public MaterialView(AppCompatActivity activity, MaterialViewPager pager)
     {
               this._act = activity;
-        View view = _act.getLayoutInflater().inflate(R.layout.view_pager_material_drawer,null);
+        View view =  LayoutInflater.from(activity).inflate(R.layout.view_pager_material_drawer,null);
         _contentLayout = (FrameLayout)view.findViewById(R.id.content);
         if(pager.allowsTabLayout())
         {
@@ -112,31 +111,25 @@ public class MaterialView {
          (_act).setSupportActionBar(_toolbar);
          applyLayout(v, _act, false);
     }
+    //endregion
 
 
+    //region private Methods
     /**
-     * Applies or Replaces the LAyout to ContentView of given Activity
-     * @param _drawerLayout Layout to Apply
-     * @param _act Activity to apply Layout
-     * @param replaceContentView shult ContentView be replaced
+     * Resizes a Drawable to 100x100px
+     * @param image
+     * @return
      */
-    public   void applyLayout(final View _drawerLayout, Activity _act,boolean replaceContentView) {
-
-        if(replaceContentView)
-        {
-            final FrameLayout content = (FrameLayout) _drawerLayout.findViewById(R.id.content);
-            View rootView = _act.findViewById(android.R.id.content).getRootView();
-
-            ViewGroup viewGroup = (ViewGroup) ((ViewGroup) _act
-                    .findViewById(android.R.id.content)).getChildAt(0);
-            ((ViewGroup) viewGroup.getParent()).removeViewInLayout(viewGroup);
-            content.addView(viewGroup);
-
-        }
-
-        _act.setContentView(_drawerLayout); // Set layout to Activity
+    private Drawable resize(Drawable image) {
+        Bitmap b = ((BitmapDrawable)image).getBitmap();
+        Bitmap bitmapResized = Bitmap.createScaledBitmap(b, 100, 100, false);
+        return new BitmapDrawable(_act.getResources(), bitmapResized);
     }
 
+
+    //endregion
+
+    //region public Methods
     /**
      * Returns the high of the StatusBar
      * @return high of Status Bar
@@ -148,6 +141,42 @@ public class MaterialView {
             result = _act.getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    /**
+     * Applies or Replaces the LAyout to ContentView of given Activity
+     * @param _drawerLayout Layout to Apply
+     * @param _act Activity to apply Layout
+     * @param replaceContentView should ContentView be replaced
+     */
+    public   void applyLayout(final View _drawerLayout, Activity _act,boolean replaceContentView) {
+
+        if(replaceContentView)
+        {
+            final FrameLayout content = (FrameLayout) _drawerLayout.findViewById(R.id.content);
+            View rootView = _act.findViewById(android.R.id.content).getRootView();
+
+            ViewGroup viewGroup = (ViewGroup) ((ViewGroup) _act
+                    .findViewById(android.R.id.content)).getChildAt(0);
+            ((ViewGroup) viewGroup.getParent()).removeViewInLayout(viewGroup);
+
+            //   View viewGrou =  _act.getLayoutInflater().inflate(resId,null);
+            content.addView(viewGroup);
+
+        }
+
+        _act.setContentView(_drawerLayout); // Set layout to Activity
+    }
+
+
+    //endregion
+
+
+    //region Properties
+
+
+    public Activity getActivity() {
+        return _act;
     }
 
     /**
@@ -194,6 +223,7 @@ public class MaterialView {
 
         _toolbar.setSubtitleTextAppearance(_act, android.R.style.TextAppearance_Small);
     }
+    //endregion
 
 
 

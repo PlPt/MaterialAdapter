@@ -7,6 +7,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +15,19 @@ import android.widget.FrameLayout;
 
 /**
  * Created by Pascal on 07.12.2015.
+ * Simple class represents a basic NavigationDrawer in MaterialDesign
  */
 public class MaterialDrawer extends MaterialView {
 
 
-    // <editor-fold desc="Var Def">
+    //region VarDef
     DrawerLayout _drawerLayout;
     NavigationView _navView;
    ActionBarDrawerToggle _toggle;
-    //</editor-fold>
+    //endregion
 
 
-    // <editor-fold desc="Constructors">
+    //region Constructors
     /**
      * Default Constructor with default Layout, Drawer wil inclue it into a drawer Layout
      * @param activity Activity member
@@ -34,11 +36,11 @@ public class MaterialDrawer extends MaterialView {
     {
 
         this._act = activity;
-       View view = _act.getLayoutInflater().inflate(R.layout.default_material_drawer,null);
+       View view =  LayoutInflater.from(activity).inflate(R.layout.default_material_drawer,null);
         _drawerLayout = (DrawerLayout)view.findViewById(R.id.drawer_layout);
         _navView = (NavigationView) _drawerLayout.findViewById(R.id.nav_view);
        _toolbar = (android.support.v7.widget.Toolbar) _drawerLayout.findViewById(R.id.toolbar);
-
+        _toolbar.setPopupTheme(PopupOverlayTheme);
             (_act).setSupportActionBar(_toolbar);
 
 
@@ -61,7 +63,9 @@ public class MaterialDrawer extends MaterialView {
 
 
         this._act = activity;
-        View view = _act.getLayoutInflater().inflate(R.layout.view_pager_material_drawer,null);
+
+        View view = activity.getLayoutInflater().inflate(R.layout.view_pager_material_drawer, null);
+
         _drawerLayout = (DrawerLayout)view.findViewById(R.id.drawer_layout);
         if(pager.allowsTabLayout())
         {
@@ -71,7 +75,7 @@ public class MaterialDrawer extends MaterialView {
         }
         _navView = (NavigationView) _drawerLayout.findViewById(R.id.nav_view);
         _toolbar = (android.support.v7.widget.Toolbar) _drawerLayout.findViewById(R.id.toolbar);
-
+        _toolbar.setPopupTheme(PopupOverlayTheme);
 
             (_act).setSupportActionBar(_toolbar);
 
@@ -104,6 +108,7 @@ public class MaterialDrawer extends MaterialView {
          _drawerLayout = drawerLayout;
         this._navView =_navView;
         _toolbar = toolbar;
+        _toolbar.setPopupTheme(PopupOverlayTheme);
 
             (_act).setSupportActionBar(_toolbar);
 
@@ -116,9 +121,9 @@ public class MaterialDrawer extends MaterialView {
 
     }
 
-    //</editor-fold>
+    //endregion
 
-    // <editor-fold desc="Private Methods">
+    //region Private Methods
 
     /**
      * Initializes the DrawerToggle
@@ -129,42 +134,6 @@ public class MaterialDrawer extends MaterialView {
                 _act, _drawerLayout, _toolbar             , R.string.drawer_open, R.string.drawer_close);
         _drawerLayout.setDrawerListener(_toggle);
         _toggle.syncState();
-    }
-
-    /**
-     * Applies the inflated Layout to the activity.
-     * Activity Layout will be replaced through the DrawerLayout. Content of Activity Layout will be added into the DrawerLayout
-     * @param _drawerLayout inflated DrawerLayout
-     * @param _act Activity to get/set Views
-     * @param replaceContentView true if the method should replace the contentView of the activity
-     */
-    private static void applyLayout(DrawerLayout _drawerLayout, Activity _act,boolean replaceContentView) {
-        if(replaceContentView) {
-            FrameLayout content = (FrameLayout) _drawerLayout.findViewById(R.id.content);
-            View rootView = _act.findViewById(android.R.id.content).getRootView();
-
-            ViewGroup viewGroup = (ViewGroup) ((ViewGroup) _act
-                    .findViewById(android.R.id.content)).getChildAt(0);
-            ((ViewGroup) viewGroup.getParent()).removeViewInLayout(viewGroup);
-            content.addView(viewGroup);
-        }
-
-        _act.setContentView(_drawerLayout);
-    }
-
-
-    /**
-     * Closes the Drawer when it's open.
-     * Can be used in an if, for checking if its open
-     * @return wasDrawerOpen?
-     */
-    public boolean closeDrawerIfOpen()
-    {
-        if (_drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            _drawerLayout.closeDrawer(GravityCompat.START);
-            return false;
-        }
-        return true;
     }
 
 
@@ -181,10 +150,48 @@ public class MaterialDrawer extends MaterialView {
         }
     }
 
-    //</editor-fold>
+
+    /**
+     * Applies the inflated Layout to the activity.
+     * Activity Layout will be replaced through the DrawerLayout. Content of Activity Layout will be added into the DrawerLayout
+     * @param _drawerLayout inflated DrawerLayout
+     * @param _act Activity to get/set Views
+     * @param replaceContentView true if the method should replace the contentView of the activity
+     */
+    private  void applyLayout(DrawerLayout _drawerLayout, Activity _act,boolean replaceContentView) {
+        _toolbar.setPopupTheme(PopupOverlayTheme);
+        if(replaceContentView) {
+            FrameLayout content = (FrameLayout) _drawerLayout.findViewById(R.id.content);
+            View rootView = _act.findViewById(android.R.id.content).getRootView();
+
+            ViewGroup viewGroup = (ViewGroup) ((ViewGroup) _act
+                    .findViewById(android.R.id.content)).getChildAt(0);
+            ((ViewGroup) viewGroup.getParent()).removeViewInLayout(viewGroup);
+            content.addView(viewGroup);
+        }
+
+        _act.setContentView(_drawerLayout);
+    }
+  //endregion
+
+    //region publicMethods
+    /**
+     * Closes the Drawer when it's open.
+     * Can be used in an if, for checking if its open
+     * @return wasDrawerOpen?
+     */
+    public boolean closeDrawerIfOpen()
+    {
+        if (_drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            _drawerLayout.closeDrawer(GravityCompat.START);
+            return false;
+        }
+        return true;
+    }
+//endregion
 
 
-    // <editor-fold desc="Properties">
+    //region Properties
 
 
     /**
@@ -244,8 +251,8 @@ public class MaterialDrawer extends MaterialView {
                 }
 
     /**
-     * Sets the DefaultHeaderView to an XML Recource
-     * @param resId Layout Resouce ID
+     * Sets the DefaultHeaderView to an XML Resource
+     * @param resId Layout Resource ID
      */
                 public void setDrawerHeader(int resId)
                 {
@@ -315,7 +322,7 @@ public class MaterialDrawer extends MaterialView {
                 }
 
 
-// </editor-fold>
+// endregion
 
 
 
