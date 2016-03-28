@@ -34,15 +34,13 @@ public class MaterialViewPager extends MaterialView {
 
     /**
      * Default Constructor with default Layout, Drawer wil include it into a drawer Layout
+     *
      * @param activity Activity member
-     *
-     *
      */
-    public MaterialViewPager(AppCompatActivity activity,boolean useTabLayout,FragmentPagerAdapter adapter)
-    {
+    public MaterialViewPager(AppCompatActivity activity, boolean useTabLayout, FragmentPagerAdapter adapter) {
         _act = activity;
 
-       this.useTabLayout = useTabLayout;
+        this.useTabLayout = useTabLayout;
         mPagerAdapter = adapter;
     }
     //endregion
@@ -53,16 +51,15 @@ public class MaterialViewPager extends MaterialView {
     /**
      * Initializes the ViewPager and it's Layout
      */
-    public void init()
-    {
-        if(_materialDrawer!=null) {
+    public void init() {
+        if (_materialDrawer != null) {
             mViewPager = (ViewPager) _materialDrawer._drawerLayout.findViewById(R.id.viewPager);
             mViewPager.setAdapter(mPagerAdapter);
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mViewPager.getLayoutParams();
             lp.topMargin += getStatusBarHeight();
             mViewPager.setLayoutParams(lp);
 
-                //region treeObserver
+            //region treeObserver
             mViewPager.getViewTreeObserver().addOnGlobalLayoutListener(
                     new ViewTreeObserver.OnGlobalLayoutListener() {
 
@@ -92,19 +89,17 @@ public class MaterialViewPager extends MaterialView {
                     });
             //endregion
 
-        }
-        else
-        {
+        } else {
 
-        final     View view =  LayoutInflater.from(_act).inflate(R.layout.view_pager_material_drawer, null);
+            final View view = LayoutInflater.from(_act).inflate(R.layout.view_pager_material_drawer, null);
             _toolbar = (android.support.v7.widget.Toolbar) view.findViewById(R.id.toolbar);
-            DrawerLayout drawerLayout = (DrawerLayout)view;
+            DrawerLayout drawerLayout = (DrawerLayout) view;
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED); // No NavView in onlyViewPagermode
-           view.findViewById(R.id.nav_view).setVisibility(View.GONE);
+            view.findViewById(R.id.nav_view).setVisibility(View.GONE);
 
 
-                    (_act).setSupportActionBar(_toolbar);
-                         applyLayout(view, _act, false);
+            (_act).setSupportActionBar(_toolbar);
+            applyLayout(view, _act, false);
 
             mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
 
@@ -112,7 +107,7 @@ public class MaterialViewPager extends MaterialView {
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mViewPager.getLayoutParams();
             lp.topMargin += getStatusBarHeight();
             mViewPager.setLayoutParams(lp);
-        view.findViewById(R.id.nav_view).setVisibility(View.GONE);
+            view.findViewById(R.id.nav_view).setVisibility(View.GONE);
             mViewPager.getViewTreeObserver().addOnGlobalLayoutListener(
                     new ViewTreeObserver.OnGlobalLayoutListener() {
 
@@ -126,7 +121,7 @@ public class MaterialViewPager extends MaterialView {
 
                             if (useTabLayout) {
                                 TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
-                               tabLayout.setVisibility(View.VISIBLE);
+                                tabLayout.setVisibility(View.VISIBLE);
                                 tabLayout.setupWithViewPager(mViewPager);
                                 tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
                                 tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
@@ -136,9 +131,9 @@ public class MaterialViewPager extends MaterialView {
 
                             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mViewPager.getLayoutParams();
                             lp.topMargin += height;
-                           // mViewPager.setLayoutParams(lp);
+                            // mViewPager.setLayoutParams(lp);
 
-                            mViewPager.setPadding(0, height-25, 0, 0);
+                            mViewPager.setPadding(0, height - 25, 0, 0);
 
                             mViewPager.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
@@ -147,9 +142,7 @@ public class MaterialViewPager extends MaterialView {
                     });
 
 
-
         }
-
 
 
     }
@@ -157,53 +150,54 @@ public class MaterialViewPager extends MaterialView {
 
     /**
      * Set the MaterialDrawer for include the ViewPager in the DrawerLayout
+     *
      * @param materialDrawer
      */
-    public void setMaterialDrawer(MaterialDrawer materialDrawer)
-    {
+    public void setMaterialDrawer(MaterialDrawer materialDrawer) {
         this._materialDrawer = materialDrawer;
     }
 
     /***
      * Sets the page margin in Pixels to the ViewPager
+     *
      * @param pixels Margin in Pixels
      */
-    public void setPageMargin(int pixels)
-    {
-        if(mViewPager!=null)mViewPager.setPageMargin(pixels);
+    public void setPageMargin(int pixels) {
+        if (mViewPager != null) mViewPager.setPageMargin(pixels);
     }
 
     /***
      * Sets the page margin in DP, the margin is relative to Display
+     *
      * @param dp DP margin
      */
-    public void setPageMarginInDp(int dp)
-    {
+    public void setPageMarginInDp(int dp) {
         setPageMargin(dpToPx(dp));
     }
 
     /***
      * Convets DP to pixels
+     *
      * @param dp Input DP
      * @return DP value in pixels
      */
-    private static int dpToPx(int dp)
-    {
+    private static int dpToPx(int dp) {
 
-        return (int) (dp *  Resources.getSystem().getDisplayMetrics().density);
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 
     /**
      * Returns true if the ViewPager allows TabLayout
+     *
      * @return isTabLayout allows
      */
-    public boolean allowsTabLayout()
-    {
+    public boolean allowsTabLayout() {
         return useTabLayout;
     }
 
     /**
      * Retuns the StatusBar high
+     *
      * @return high of status bar
      */
     public int getStatusBarHeight() {
@@ -217,6 +211,7 @@ public class MaterialViewPager extends MaterialView {
 
     /**
      * Sets current selected Fragment/Tab
+     *
      * @param currentItem Position f the Fragment to select
      */
     public void setCurrentItem(int currentItem) {
