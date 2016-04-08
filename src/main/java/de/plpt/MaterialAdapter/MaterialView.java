@@ -207,6 +207,7 @@ public class MaterialView {
      */
     public void setToolbarTitle(String title)
     {
+        if(_act.getSupportActionBar() !=null)
         (_act).getSupportActionBar().setTitle(title);
 
 
