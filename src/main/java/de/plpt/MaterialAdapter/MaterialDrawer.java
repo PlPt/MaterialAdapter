@@ -76,6 +76,7 @@ public class MaterialDrawer extends MaterialView {
         _toolbar = (android.support.v7.widget.Toolbar) _drawerLayout.findViewById(R.id.toolbar);
         _toolbar.setPopupTheme(PopupOverlayTheme);
 
+
         (_act).setSupportActionBar(_toolbar);
 
 
@@ -204,6 +205,12 @@ public class MaterialDrawer extends MaterialView {
      */
     public Activity getActivity() {
         return _act;
+    }
+
+
+    public NavigationView getNavigationView()
+    {
+        return _navView;
     }
 
     /**
