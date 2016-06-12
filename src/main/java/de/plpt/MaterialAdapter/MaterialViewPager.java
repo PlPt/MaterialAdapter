@@ -181,7 +181,7 @@ public class MaterialViewPager extends MaterialView {
      * @param dp Input DP
      * @return DP value in pixels
      */
-    private static int dpToPx(int dp) {
+    public static int dpToPx(int dp) {
 
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
